@@ -1,0 +1,45 @@
+{
+  "name": "ut-alert",
+  "version": "5.8.8",
+  "description": "",
+  "main": "index.js",
+  "peerDependencies": {
+    "ut-port-sql": "^6.0.1"
+  },
+  "devDependencies": {
+    "ut-tools": "^5.13.5"
+  },
+  "dependencies": {
+    "joi": "10.0.6",
+    "lodash.assign": "4.2.0",
+    "lodash.template": "4.4.0",
+    "requestretry": "^1.12.0",
+    "ut-error": "^5.4.0",
+    "when": "3.7.7"
+  },
+  "scripts": {
+    "lint": "ut-lint .",
+    "test": "ut-test",
+    "changelog": "ut-changelog",
+    "check": "ut-check",
+    "cover": "ut-cover",
+    "lint-js": "ut-lint-js .",
+    "postpublish": "ut-postpublish",
+    "postversion": "ut-postversion",
+    "precommit": "ut-precommit",
+    "prepublish": "ut-prepublish",
+    "prepush": "ut-prepush",
+    "pretest": "ut-pretest",
+    "preversion": "ut-preversion",
+    "release": "ut-release",
+    "version": "ut-version",
+    "jenkins": "ut-jenkins",
+    "gitlab": "ut-gitlab"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:softwaregroup-bg/ut-alert.git"
+  },
+  "author": "",
+  "license": "Apache-2.0"
+}
