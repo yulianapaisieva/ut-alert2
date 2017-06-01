@@ -1,2 +1,1 @@
-# ut-alert2
-fork for ut-alert
+# Module ut-alert
