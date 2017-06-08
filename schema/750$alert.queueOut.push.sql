@@ -7,8 +7,7 @@ ALTER PROCEDURE [alert].[queueOut.push]
     @messageInId BIGINT = NULL,
     @meta [core].[metaDataTT] READONLY,
     @languageOnSent varchar(5) = NULL,
-    @smsProvider varchar(50) = NULL,
-    @externalId nvarchar(50) = NULL
+    @smsProvider varchar(50) = NULL   
 AS
 BEGIN
     BEGIN TRY
@@ -21,10 +20,10 @@ BEGIN
 
         SELECT 'inserted' resultSetName;
 
-        INSERT INTO [alert].[messageOut](port, channel, recipient, content, createdBy, createdOn, statusId, priority, messageInId,language,smsProvider,externalId)
+        INSERT INTO [alert].[messageOut](port, channel, recipient, content, createdBy, createdOn, statusId, priority, messageInId,language,smsProvider)
         OUTPUT INSERTED.id, INSERTED.port, INSERTED.channel, INSERTED.recipient, INSERTED.content, INSERTED.createdBy, INSERTED.createdOn,
-                @statusName as status, INSERTED.priority, INSERTED.messageInId, INSERTED.language,INSERTED.smsProvider,INSERTED.externalId
-        SELECT @port, @channel, LTRIM(RTRIM([value])), @content, @actorId, SYSDATETIMEOFFSET(), @statusId, @priority, @messageInId,@languageOnSent,@smsProvider,@externalId
+                @statusName as status, INSERTED.priority, INSERTED.messageInId, INSERTED.language,INSERTED.smsProvider
+        SELECT @port, @channel, LTRIM(RTRIM([value])), @content, @actorId, SYSDATETIMEOFFSET(), @statusId, @priority, @messageInId,@languageOnSent,@smsProvider
         FROM @recipient
     END TRY
     BEGIN CATCH

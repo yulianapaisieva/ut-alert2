@@ -1,7 +1,8 @@
 ALTER PROCEDURE [alert].[queueOut.notifyFailure] -- used by port to report failure on sending
     @messageId int, -- the ID of the message to report
     @errorMessage nvarchar(max), -- the error to report
-    @errorCode nvarchar(64) -- the error code to report
+    @errorCode nvarchar(64), -- the error code to report
+    @externalId nvarchar(50) = NULL--message id from sms provider
 AS
 BEGIN TRY
     DECLARE @statusProcessing int = (SELECT id FROM [alert].[status] WHERE [name] = 'PROCESSING')
@@ -19,13 +20,27 @@ BEGIN TRY
 
     SELECT 'updated' resultSetName, 1 single;
 
-    UPDATE m
-    SET [statusId] = @statusFailed,
-        [error] = @errorMessage,
-        [timeSent] = GETDATE()
-    OUTPUT INSERTED.id as [messageId], 'FAILED' as [status], INSERTED.[error], INSERTED.[timeSent]
-    FROM [alert].[messageOut] m
-    WHERE m.[id] = @messageId;
+    IF @externalId IS NOT NULL
+    BEGIN
+        UPDATE m
+        SET [statusId] = @statusFailed,
+            [error] = @errorMessage,
+            [timeSent] = GETDATE(),
+            [externalId] = @externalId
+        OUTPUT INSERTED.id as [messageId], 'FAILED' as [status], INSERTED.[error], INSERTED.[timeSent], INSERTED.[externalId]
+        FROM [alert].[messageOut] m
+        WHERE m.[id] = @messageId;
+    END
+    ELSE
+    BEGIN
+        UPDATE m
+        SET [statusId] = @statusFailed,
+            [error] = @errorMessage,
+            [timeSent] = GETDATE()           
+        OUTPUT INSERTED.id as [messageId], 'FAILED' as [status], INSERTED.[error], INSERTED.[timeSent]
+        FROM [alert].[messageOut] m
+        WHERE m.[id] = @messageId;
+    END    
 END TRY
 BEGIN CATCH
 DECLARE @CORE_ERROR_FILE_28 sysname='d:\PROJECTS\impl-vfz\node_modules\ut-alert\schema/750$alert.queueOut.notifyFailure.sql' DECLARE @CORE_ERROR_LINE_28 int='29' EXEC [core].[errorStack] @procid=@@PROCID, @file=@CORE_ERROR_FILE_28, @fileLine=@CORE_ERROR_LINE_28, @params = NULL
